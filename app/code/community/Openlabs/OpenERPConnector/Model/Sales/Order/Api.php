@@ -23,6 +23,7 @@ class Openlabs_OpenERPConnector_Model_Sales_Order_Api extends Mage_Sales_Model_O
 
             $collection = Mage::getModel("sales/order")->getCollection()
                 ->addAttributeToSelect('increment_id')
+                ->addAttributeToSelect('entity_id')
                 ->addAttributeToFilter('imported', array('eq' => $data['imported']));
             if(isset($data['fields']) && is_array($data['fields'])) {
                 foreach($data['fields'] as $field) {
@@ -51,7 +52,8 @@ class Openlabs_OpenERPConnector_Model_Sales_Order_Api extends Mage_Sales_Model_O
 
             foreach ($collection as $order) {
                 $res = array();
-                $res['increment_id'] = $order['increment_id'];
+                $res['increment_id'] = $order->getIncrementId();
+                $res['order_id'] = $order->getId();
                 if(isset($data['fields']) && is_array($data['fields'])) {
                     foreach($data['fields'] as $field) {
                         $res[$field] = $order[$field];
