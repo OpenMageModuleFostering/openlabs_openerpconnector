@@ -24,9 +24,15 @@ class Openlabs_OpenERPConnector_Model_Sales_Order_Api extends Mage_Sales_Model_O
             $collection = Mage::getModel("sales/order")->getCollection()
                 ->addAttributeToSelect('increment_id')
                 ->addAttributeToFilter('imported', array('eq' => $data['imported']));
+            if(isset($data['fields']) && is_array($data['fields'])) {
+                foreach($data['fields'] as $field) {
+                    $collection->addAttributeToSelect($field);
+                }
+            }
 
             if(isset($data['limit'])) {
                 $collection->setPageSize($data['limit']);
+                $collection->setCurPage($data['page']);
                 $collection->setOrder('entity_id', 'ASC');
             }
 
@@ -36,9 +42,22 @@ class Openlabs_OpenERPConnector_Model_Sales_Order_Api extends Mage_Sales_Model_O
                     $collection->addAttributeToFilter($field, $value);
                 }
             }
+            $result['perPage'] = $collection->getPageSize();
+            $result['totalCount'] = $collection->getSize();
+            $result['page'] = $collection->getCurPage();
+            $result['hasNext'] = $collection->getLastPageNumber() > $collection->getCurPage();
+            $result['lastPage'] = intval($collection->getLastPageNumber());
+            $result['items'] = array();
 
             foreach ($collection as $order) {
-                $result[] =  $order['increment_id'];
+                $res = array();
+                $res['increment_id'] = $order['increment_id'];
+                if(isset($data['fields']) && is_array($data['fields'])) {
+                    foreach($data['fields'] as $field) {
+                        $res[$field] = $order[$field];
+                    }
+                }
+                $result['items'][] = $res;
             }
 
             return $result;
