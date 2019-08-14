@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Openlabs_OpenERPConnector",
+    "type": "magento-module",
+    "license": "GPL",
+    "homepage": "",
+    "description": "Magento core API extension for multi website Open ERP connector by Openlabs",
+    "authors": [
+    {
+        "name": "Sharoon Thomas",
+        "email": "sharoon.thomas@openlabs.co.in"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
